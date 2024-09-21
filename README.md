@@ -53,3 +53,29 @@ These chunks are concatenated with the user query and passed to LLaMA-2 to gener
 The generated answer is returned and displayed to the user.
 ## 5. Deployment Using Ngrok
 Ngrok is used to expose the Streamlit app to the public. This allows users to interact with the RAG bot from any location, without needing to set up a local server.
+
+## 6. How to Run the Application
+- Install Dependencies: Ensure all necessary packages (PyTorch, SentenceTransformer, FAISS, PyPDF2, Transformers, Streamlit) are installed.
+
+!pip install sentence-transformers faiss-cpu PyPDF2 transformers streamlit torch
+
+- Run the Application:
+
+The application can be run using Streamlit.
+
+!streamlit run app.py
+
+- Expose the Application with Ngrok:
+
+Ngrok is used to make the application publicly accessible.
+Start Ngrok:
+
+ngrok.set_auth_token("your-ngrok-token")
+public_url = ngrok.connect(addr='8501', proto='http', bind_tls=True)
+
+After starting Streamlit and Ngrok, the application will be live at the provided public URL.
+
+
+
+
+

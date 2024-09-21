@@ -16,7 +16,7 @@ BitsAndBytes: For efficient model quantization to 8-bit, speeding up inference.
 
 
 
-1. Model Architecture
+## 1. Model Architecture
 - Embedding Model
 SentenceTransformer: We use the SentenceTransformer model, specifically the paraphrase-MiniLM-L6-v2 for embedding the uploaded document texts and the user query. The model encodes each text segment into a vector, capturing semantic meaning and context.
 Why MiniLM-L6-v2?: It’s a small but effective model for sentence embeddings, allowing for faster computation while maintaining reasonable accuracy.
@@ -28,28 +28,28 @@ LLaMA 2 (LLaMA-2-7B Chat): We use LLaMA 2 as the language model to generate resp
 
 BitsAndBytes Quantization: The model is loaded in 8-bit precision using BitsAndBytesConfig, allowing for faster computation and lower memory usage while maintaining model accuracy. This allows for better efficiency when using large models like LLaMA-2.
 
-2. Approach to Retrieval
-Document Upload and Chunking: When a user uploads PDF documents, the bot extracts the text from each page using PyPDF2 and chunks the text into segments of 1000 characters. This chunking improves the quality of embeddings, especially for longer documents.
+## 2. Approach to Retrieval
+- Document Upload and Chunking: When a user uploads PDF documents, the bot extracts the text from each page using PyPDF2 and chunks the text into segments of 1000 characters. This chunking improves the quality of embeddings, especially for longer documents.
 
-Embedding Generation: After chunking, embeddings are generated for each document chunk using SentenceTransformer, which converts each chunk into a high-dimensional vector.
+- Embedding Generation: After chunking, embeddings are generated for each document chunk using SentenceTransformer, which converts each chunk into a high-dimensional vector.
 
-Indexing with FAISS: The document embeddings are added to a FAISS index. FAISS allows for fast similarity searches, which is crucial when processing multiple documents in real-time.
+- Indexing with FAISS: The document embeddings are added to a FAISS index. FAISS allows for fast similarity searches, which is crucial when processing multiple documents in real-time.
 
-Query Processing: When the user asks a question, it is encoded into a query vector using the same embedding model. This query vector is then compared against the FAISS index to find the top-3 most similar document chunks.
+- Query Processing: When the user asks a question, it is encoded into a query vector using the same embedding model. This query vector is then compared against the FAISS index to find the top-3 most similar document chunks.
 
-3. Generating Responses
-Contextual Query Augmentation: Once the relevant document chunks are retrieved from the FAISS index, the system concatenates the original question and retrieved information to form an augmented input. This augmented input includes the user’s query and context from the documents, which is then passed to the LLaMA-2 model.
+## 3. Generating Responses
+- Contextual Query Augmentation: Once the relevant document chunks are retrieved from the FAISS index, the system concatenates the original question and retrieved information to form an augmented input. This augmented input includes the user’s query and context from the documents, which is then passed to the LLaMA-2 model.
 
-Response Generation: The augmented input is tokenized using AutoTokenizer, and passed through the AutoModelForCausalLM to generate a response. The model is set to a specific number of tokens, temperature, and top-p values to control the diversity and coherence of the output.
+- Response Generation: The augmented input is tokenized using AutoTokenizer, and passed through the AutoModelForCausalLM to generate a response. The model is set to a specific number of tokens, temperature, and top-p values to control the diversity and coherence of the output.
 
-Display of Final Answer: The generated response is decoded and presented to the user as the final answer. If no relevant document chunks are found (i.e., no meaningful similarity), a fallback message is shown: "No relevant document found."
+- Display of Final Answer: The generated response is decoded and presented to the user as the final answer. If no relevant document chunks are found (i.e., no meaningful similarity), a fallback message is shown: "No relevant document found."
 
-4. How Responses are Created
+## 4. How Responses are Created
 The response generation follows this flow:
 User inputs a query.
 Query is converted into an embedding vector and searched within the FAISS index.
 Top-3 relevant document chunks are retrieved.
 These chunks are concatenated with the user query and passed to LLaMA-2 to generate the final answer.
 The generated answer is returned and displayed to the user.
-5. Deployment Using Ngrok
+## 5. Deployment Using Ngrok
 Ngrok is used to expose the Streamlit app to the public. This allows users to interact with the RAG bot from any location, without needing to set up a local server.

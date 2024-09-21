@@ -17,13 +17,13 @@ BitsAndBytes: For efficient model quantization to 8-bit, speeding up inference.
 
 
 1. Model Architecture
-a. Embedding Model
+- Embedding Model
 SentenceTransformer: We use the SentenceTransformer model, specifically the paraphrase-MiniLM-L6-v2 for embedding the uploaded document texts and the user query. The model encodes each text segment into a vector, capturing semantic meaning and context.
 Why MiniLM-L6-v2?: It’s a small but effective model for sentence embeddings, allowing for faster computation while maintaining reasonable accuracy.
-b. Vector Database (FAISS)
+-  Vector Database (FAISS)
 FAISS (Facebook AI Similarity Search): This vector database is used to perform nearest-neighbor searches on the document embeddings. FAISS allows for efficient similarity searches even with a large number of embeddings.
 The embeddings of document chunks are stored in FAISS, which is queried when a user asks a question to retrieve the top-k similar documents (in this case, k=3).
-c. Generative Model
+- Generative Model
 LLaMA 2 (LLaMA-2-7B Chat): We use LLaMA 2 as the language model to generate responses based on the query and retrieved context. This model processes the user’s question alongside relevant retrieved document sections to create an accurate and contextually aware answer.
 
 BitsAndBytes Quantization: The model is loaded in 8-bit precision using BitsAndBytesConfig, allowing for faster computation and lower memory usage while maintaining model accuracy. This allows for better efficiency when using large models like LLaMA-2.
